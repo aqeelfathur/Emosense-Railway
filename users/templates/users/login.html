@@ -1,0 +1,221 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login - EmoSense</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: #f0f4ff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        .container {
+            display: flex;
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+            max-width: 900px;
+            width: 100%;
+            min-height: 500px;
+        }
+
+        /* Panel Kiri - Welcome */
+        .welcome-panel {
+            flex: 1;
+            background: #5F8D99;
+            color: white;
+            padding: 3rem 2.5rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+        }
+
+        .welcome-panel h2 {
+            font-size: 2.2rem;
+            margin-bottom: 1rem;
+            font-weight: 600;
+        }
+
+        .welcome-panel p {
+            font-size: 1rem;
+            line-height: 1.6;
+            margin-bottom: 2rem;
+            opacity: 0.95;
+        }
+
+        .signup-btn {
+            padding: 0.8rem 3rem;
+            background: transparent;
+            color: white;
+            border: 2px solid white;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .signup-btn:hover {
+            background: white;
+            color: #5a7ba6;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(255, 255, 255, 0.3);
+        }
+
+        /* Panel Kanan - Form */
+        .form-panel {
+            flex: 1;
+            padding: 3rem 3rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .form-panel h1 {
+            color: #2c3e50;
+            font-size: 2rem;
+            margin-bottom: 2rem;
+            font-weight: 1200;
+        }
+
+        .form-panel h2 {
+            color: #5F8D99;
+            font-size: 1.5rem;
+            margin-bottom: 1.5rem;
+            font-weight: 1200;
+            text-align: center;
+        }
+
+        .form-group {
+            margin-bottom: 1.2rem;
+        }
+
+        .form-group input {
+            width: 100%;
+            padding: 0.9rem 1rem;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 0.95rem;
+            transition: border-color 0.3s;
+            background: #f8f9fa;
+        }
+
+        .form-group input:focus {
+            outline: none;
+            border-color: #5a7ba6;
+            background: white;
+        }
+
+        .signin-btn {
+            width: 100%;
+            padding: 0.9rem;
+            background: #5F8D99;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            margin-top: 0.5rem;
+        }
+
+        .signin-btn:hover {
+            background: #4a6a96;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(90, 123, 166, 0.3);
+        }
+
+        .messages {
+            list-style: none;
+            margin-top: 1rem;
+
+        }
+
+        .messages li {
+            padding: 0.7rem;
+            background: #fee;
+            color: #5F8D99;
+            border-radius: 8px;
+            margin-bottom: 0.5rem;
+            font-size: 0.9rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                flex-direction: column;
+            }
+
+            .welcome-panel {
+                order: -1;
+                padding: 2rem 1.5rem;
+            }
+
+            .form-panel {
+                padding: 2rem 1.5rem;
+            }
+
+            .welcome-panel h2 {
+                font-size: 1.8rem;
+            }
+
+            .form-panel h2 {
+                font-size: 1.6rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Panel Kiri: Welcome -->
+        <div class="welcome-panel">
+            <h2>Hello, Friend!</h2>
+            <p>Enter your personal details and start your journey with us</p>
+            <a href="{% url 'users:register' %}">
+                <button type="button" class="signup-btn">SIGN UP</button>
+            </a>
+        </div>
+
+        <!-- Panel Kanan: Form Login -->
+        <div class="form-panel">
+            <h1>EmoSense</h1>
+            <h2>Sign In</h2>
+            
+            <form method="POST">
+                {% csrf_token %}
+                <div class="form-group">
+                    <input type="text" name="username" placeholder="Username" required>
+                </div>
+                <div class="form-group">
+                    <input type="password" name="password" placeholder="Password" required>
+                </div>
+                <button type="submit" class="signin-btn">SIGN IN</button>
+            </form>
+
+            {% if messages %}
+                <ul class="messages">
+                    {% for message in messages %}
+                        <li>{{ message }}</li>
+                    {% endfor %}
+                </ul>
+            {% endif %}
+        </div>
+    </div>
+</body>
+</html>

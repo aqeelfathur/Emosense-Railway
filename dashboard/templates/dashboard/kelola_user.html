@@ -1,0 +1,374 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kelola User - Emosense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F8F9FA;
+            display: flex;
+            min-height: 100vh;
+            color: #2D3748;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 260px;
+            background: #63919D;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-header h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 24px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFFFFF;
+            border-left-color: #FFFFFF;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: #FFFFFF;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 32px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: #FFFFFF;
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+            border-left: 4px solid #63919D;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1A202C;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        /* ========== ALERT MESSAGES ========== */
+        .alert {
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .alert-success {
+            background: #D1FAE5;
+            color: #065F46;
+            border-left: 4px solid #10B981;
+        }
+
+        .alert-error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border-left: 4px solid #EF4444;
+        }
+
+        .alert-close {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 600;
+            color: inherit;
+            background: none;
+            border: none;
+            padding: 0 8px;
+            transition: opacity 0.2s;
+        }
+
+        .alert-close:hover {
+            opacity: 0.7;
+        }
+
+        /* ========== CONTENT CARD ========== */
+        .content-card {
+            background: #FFFFFF;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .content-card h2 {
+            margin-bottom: 24px;
+            color: #1A202C;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        /* ========== TABLE ========== */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-top: 20px;
+        }
+
+        thead {
+            background: #F7FAFC;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4A5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            color: #2D3748;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #F7FAFC;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        /* ========== BADGES ========== */
+        .badge {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+
+        .badge.admin {
+            background: #63919D;
+            color: #FFFFFF;
+        }
+
+        .badge.user {
+            background: #4A5568;
+            color: #FFFFFF;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 12px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-edit {
+            background: #3B82F6;
+            color: white;
+        }
+
+        .btn-edit:hover {
+            background: #2563EB;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: #EF4444;
+            color: white;
+            margin-left: 8px;
+        }
+
+        .btn-delete:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        /* ========== NO DATA ========== */
+        .no-data {
+            text-align: center;
+            padding: 48px 20px;
+            color: #A0AEC0;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>EMOSENSE</h2>
+            <p>Admin Dashboard</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="{% url 'dashboard:home' %}">
+                Dashboard
+            </a>
+            <a href="{% url 'dashboard:kelola_user' %}" class="active">
+                Kelola User
+            </a>
+            <a href="{% url 'dashboard:kelola_history' %}">
+                Kelola History
+            </a>
+            <a href="{% url 'users:logout' %}">
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <h1>Kelola User</h1>
+            <p>Manajemen pengguna sistem Emosense</p>
+        </div>
+
+        <!-- Alert Messages -->
+        {% if messages %}
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                <span>{{ message }}</span>
+                <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+            </div>
+            {% endfor %}
+        {% endif %}
+
+        <div class="content-card">
+            <h2>Daftar Semua User</h2>
+            
+            {% if users_list %}
+            <table>
+                <thead>
+                    <tr>
+                        <th>Username</th>
+                        <th>Email</th>
+                        <th>Role</th>
+                        <th>Total Deteksi</th>
+                        <th>Terdaftar</th>
+                        <th>Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for user in users_list %}
+                    <tr>
+                        <td><strong>{{ user.username }}</strong></td>
+                        <td>{{ user.email }}</td>
+                        <td>
+                            <span class="badge {{ user.role }}">{{ user.role }}</span>
+                        </td>
+                        <td>{{ user.total_deteksi }}</td>
+                        <td>{{ user.date_joined|date:"d M Y" }}</td>
+                        <td>
+                            <a href="{% url 'dashboard:edit_user' user.id_user %}" class="btn btn-edit">Edit</a>
+                            <a href="{% url 'dashboard:delete_user' user.id_user %}" 
+                               class="btn btn-delete" 
+                               onclick="return confirm('Yakin hapus user {{ user.username }}?')">Hapus</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+            {% else %}
+            <div class="no-data">Belum ada data user</div>
+            {% endif %}
+        </div>
+    </main>
+</body>
+</html>

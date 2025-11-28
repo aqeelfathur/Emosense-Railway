@@ -1,0 +1,448 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Detail History - Emosense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F8F9FA;
+            display: flex;
+            min-height: 100vh;
+            color: #2D3748;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 260px;
+            background: #63919D;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-header h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 24px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFFFFF;
+            border-left-color: #FFFFFF;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: #FFFFFF;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 32px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: #FFFFFF;
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+            border-left: 4px solid #63919D;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1A202C;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        /* ========== CONTENT CARD ========== */
+        .content-card {
+            background: #FFFFFF;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+        }
+
+        /* ========== DETAIL SECTION ========== */
+        .detail-section {
+            margin-bottom: 32px;
+        }
+
+        .detail-section h3 {
+            color: #1A202C;
+            font-size: 16px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            padding-bottom: 12px;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        .detail-row {
+            display: flex;
+            padding: 12px 0;
+            border-bottom: 1px solid #F7FAFC;
+        }
+
+        .detail-row:last-child {
+            border-bottom: none;
+        }
+
+        .detail-label {
+            width: 200px;
+            font-weight: 600;
+            color: #718096;
+            font-size: 14px;
+        }
+
+        .detail-value {
+            flex: 1;
+            color: #2D3748;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* ========== BADGES ========== */
+        .badge {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+
+        .badge.joy { 
+            background: #FEF3C7; 
+            color: #92400E; 
+        }
+        .badge.sadness { 
+            background: #DBEAFE; 
+            color: #1E40AF; 
+        }
+        .badge.anger { 
+            background: #FEE2E2; 
+            color: #991B1B; 
+        }
+        .badge.fear { 
+            background: #F3E8FF; 
+            color: #6B21A8; 
+        }
+        .badge.love { 
+            background: #FCE7F3; 
+            color: #9F1239; 
+        }
+
+        /* ========== LINKS ========== */
+        .yt-link {
+            color: #3B82F6;
+            text-decoration: none;
+            font-weight: 500;
+        }
+
+        .yt-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ========== TEXT CONTENT ========== */
+        .text-content {
+            background: #F7FAFC;
+            padding: 16px;
+            border-radius: 8px;
+            border-left: 4px solid #3B82F6;
+            font-family: 'Courier New', monospace;
+            font-size: 13px;
+            color: #2D3748;
+            line-height: 1.6;
+            max-height: 300px;
+            overflow-y: auto;
+        }
+
+        /* ========== EMOTION BREAKDOWN ========== */
+        .emotion-breakdown {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px;
+            margin-top: 16px;
+        }
+
+        .emotion-card {
+            background: #F7FAFC;
+            padding: 16px;
+            border-radius: 8px;
+            text-align: center;
+            border: 1px solid #E2E8F0;
+        }
+
+        .emotion-card .emotion-name {
+            font-weight: 600;
+            color: #2D3748;
+            margin-bottom: 8px;
+            font-size: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .emotion-card .emotion-percent {
+            font-size: 24px;
+            font-weight: 700;
+            color: #3B82F6;
+        }
+
+        /* ========== BUTTONS ========== */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+            margin-right: 12px;
+        }
+
+        .btn-back {
+            background: #6B7280;
+            color: white;
+        }
+
+        .btn-back:hover {
+            background: #4B5563;
+            transform: translateY(-1px);
+        }
+
+        .btn-delete {
+            background: #EF4444;
+            color: white;
+        }
+
+        .btn-delete:hover {
+            background: #DC2626;
+            transform: translateY(-1px);
+        }
+
+        .action-buttons {
+            margin-top: 32px;
+            padding-top: 24px;
+            border-top: 2px solid #E2E8F0;
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .detail-row {
+                flex-direction: column;
+            }
+            .detail-label {
+                width: 100%;
+                margin-bottom: 4px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>EMOSENSE</h2>
+            <p>Admin Dashboard</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="{% url 'dashboard:home' %}">
+                Dashboard
+            </a>
+            <a href="{% url 'dashboard:kelola_user' %}">
+                Kelola User
+            </a>
+            <a href="{% url 'dashboard:kelola_history' %}" class="active">
+                Kelola History
+            </a>
+            <a href="{% url 'users:logout' %}">
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <div class="header">
+            <h1>Detail History Deteksi</h1>
+            <p>Informasi lengkap hasil deteksi emosi</p>
+        </div>
+
+        <div class="content-card">
+            <!-- Informasi Umum -->
+            <div class="detail-section">
+                <h3>Informasi Umum</h3>
+                <div class="detail-row">
+                    <div class="detail-label">ID Deteksi:</div>
+                    <div class="detail-value"><strong>{{ history.id_cek }}</strong></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Username:</div>
+                    <div class="detail-value">{{ history.user.username }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Email:</div>
+                    <div class="detail-value">{{ history.user.email }}</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Tanggal Deteksi:</div>
+                    <div class="detail-value">{{ history.tanggal|date:"d F Y, H:i:s" }} WIB</div>
+                </div>
+            </div>
+
+            <!-- Hasil Deteksi -->
+            <div class="detail-section">
+                <h3>Hasil Deteksi</h3>
+                <div class="detail-row">
+                    <div class="detail-label">Emosi Dominan:</div>
+                    <div class="detail-value">
+                        <span class="badge {{ history.hasil_deteksi }}">{{ history.hasil_deteksi }}</span>
+                    </div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Confidence Score:</div>
+                    <div class="detail-value"><strong>{{ history.confidence_score|floatformat:2 }}%</strong></div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Jumlah Komentar:</div>
+                    <div class="detail-value">{{ history.jumlah_comment }} komentar</div>
+                </div>
+            </div>
+
+            <!-- Sumber Data -->
+            <div class="detail-section">
+                <h3>Sumber Data</h3>
+                {% if history.link_yt %}
+                <div class="detail-row">
+                    <div class="detail-label">Tipe Input:</div>
+                    <div class="detail-value">YouTube Video</div>
+                </div>
+                <div class="detail-row">
+                    <div class="detail-label">Link YouTube:</div>
+                    <div class="detail-value">
+                        <a href="{{ history.link_yt }}" target="_blank" class="yt-link">
+                            {{ history.link_yt }}
+                        </a>
+                    </div>
+                </div>
+                {% else %}
+                <div class="detail-row">
+                    <div class="detail-label">Tipe Input:</div>
+                    <div class="detail-value">Teks Manual</div>
+                </div>
+                {% if history.input_text %}
+                <div class="detail-row">
+                    <div class="detail-label">Teks Input:</div>
+                    <div class="detail-value">
+                        <div class="text-content">{{ history.input_text }}</div>
+                    </div>
+                </div>
+                {% endif %}
+                {% endif %}
+            </div>
+
+            <!-- Detail Persentase Emosi -->
+            <div class="detail-section">
+                <h3>Breakdown Emosi</h3>
+                {% if detail_hasil %}
+                <div class="emotion-breakdown">
+                    {% for emotion, percentage in detail_hasil.items %}
+                    <div class="emotion-card">
+                        <div class="emotion-name">{{ emotion }}</div>
+                        <div class="emotion-percent">{{ percentage|floatformat:1 }}%</div>
+                    </div>
+                    {% endfor %}
+                </div>
+                {% else %}
+                <p style="color: #A0AEC0; font-style: italic;">Detail breakdown tidak tersedia</p>
+                {% endif %}
+            </div>
+
+            <!-- Action Buttons -->
+            <div class="action-buttons">
+                <a href="{% url 'dashboard:kelola_history' %}" class="btn btn-back">Kembali</a>
+                <a href="{% url 'dashboard:delete_history' history.id_cek %}" 
+                   class="btn btn-delete" 
+                   onclick="return confirm('Yakin hapus history ini? Data akan terhapus permanen!')">
+                   Hapus History
+                </a>
+            </div>
+        </div>
+    </main>
+</body>
+</html>

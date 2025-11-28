@@ -1,0 +1,515 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Dashboard Admin - Emosense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #f5f6fa;
+            display: flex;
+            min-height: 100vh;
+            color: #2D3748;
+        }
+
+        /* Sidebar */
+        .sidebar {
+            width: 260px;
+            background: #63919D;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+        }
+
+        .sidebar-header h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 24px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFFFFF;
+            border-left-color: #FFFFFF;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: #FFFFFF;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        /* Main content */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 32px;
+            background: #F8F9FA;
+        }
+
+        /* Header */
+        .page-header {
+            background: #FFFFFF;
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 32px;
+            border-left: 4px solid #63919D;
+        }
+
+        .page-header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1A202C;
+        }
+
+        .page-header p {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        /*  Statistic Cards */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 25px;
+            margin-bottom: 32px;
+        }
+
+        .stat-card {
+            background: #FFFFFF;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            transition: all 0.2s ease;
+            border-left: 4px solid #63919D;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+        }
+
+        .stat-content h3 {
+            color: #718096;
+            font-size: 13px;
+            font-weight: 500;
+            margin-bottom: 12px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .stat-content .stat-number {
+            color: #1A202C;
+            font-size: 36px;
+            font-weight: 700;
+            line-height: 1;
+        }
+
+        /* Table Section */
+        .tables-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(550px, 1fr));
+            gap: 24px;
+        }
+
+        .table-card {
+            background: white;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+        }
+
+        .table-header {
+            margin-bottom: 24px;
+            padding-bottom: 16px;
+            border-bottom: 2px solid #E2E8F0;
+        }
+
+        .table-header h2 {
+            color: #1A202C;
+            font-size: 18px;
+            font-weight: 600;
+        }
+
+        .table-wrapper {
+            overflow-x: auto;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        thead {
+            background: #F7FAFC;
+        }
+
+        th {
+            padding: 14px 16px;
+            text-align: left;
+            font-size: 12px;
+            font-weight: 600;
+            color: #4A5568;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        td {
+            padding: 16px;
+            border-bottom: 1px solid #E2E8F0;
+            color: #2D3748;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        tbody tr {
+            transition: background 0.15s ease;
+        }
+
+        tbody tr:hover {
+            background: #f8f9fa;
+        }
+
+        tbody tr:last-child td {
+            border-bottom: none;
+        }
+
+        .badge {
+            padding: 6px 14px;
+            border-radius: 6px;
+            font-size: 11px;
+            font-weight: 600;
+            text-transform: uppercase;
+            letter-spacing: 0.3px;
+            display: inline-block;
+        }
+
+        .badge.admin {
+            background: #63919D;
+            color: #FFFFFF;
+        }
+
+        .badge.user {
+            background: #4A5568;
+            color: #FFFFFF;
+        }
+
+        .badge.joy { 
+            background: #FEF3C7;
+            color: #92400E;
+        }
+        
+        .badge.sadness { 
+            background: #DBEAFE;
+            color: #1E3A8A;
+        }
+        
+        .badge.anger { 
+            background: #FEE2E2;
+            color: #991B1B;
+        }
+        
+        .badge.fear { 
+            background: #F3E8FF;
+            color: #6B21A8;
+        }
+        
+        .badge.love { 
+            background: #FCE7F3;
+            color: #9F1239;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 50px 20px;
+            color: #95a5a6;
+            font-style: italic;
+            font-size: 15px;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 48px 20px;
+            color: #A0AEC0;
+            font-size: 14px;
+            font-weight: 400;
+        }
+
+        /* Toast Notification */
+        #toast-container {
+            position: fixed;
+            top: 24px;
+            right: 24px;
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            z-index: 9999;
+        }
+
+        .toast {
+            padding: 16px 24px;
+            border-radius: 8px;
+            color: white;
+            font-weight: 500;
+            min-width: 280px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+            opacity: 0;
+            transform: translateX(400px);
+            animation: slideInRight 0.3s forwards;
+            font-size: 14px;
+        }
+
+        .toast.success { 
+            background: #10B981;
+        }
+
+        .toast.warning { 
+            background: #F59E0B;
+        }
+
+        .toast.error { 
+            background: #EF4444;
+        }
+
+        .toast.info { 
+            background: #3B82F6;
+        }
+
+        @keyframes slideInRight {
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+
+        .toast.hide {
+            opacity: 0;
+            transform: translateX(400px);
+            transition: all 0.3s ease;
+        }
+        
+        /* Responsive */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+            .tables-section {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <!-- Sidebar -->
+    <aside class="sidebar">
+        <div class="sidebar-header">
+            <h2>EMOSENSE</h2>
+            <p>Admin Dashboard</p>
+        </div>
+        <nav class="sidebar-menu">
+            <a href="#" class="active">
+                Dashboard
+            </a>
+            <a href="#">
+                Kelola User
+            </a>
+            <a href="#">
+                Kelola History
+            </a>
+            <a href="#">
+                Logout
+            </a>
+        </nav>
+    </aside>
+
+    <!-- Toast Notifications -->
+    <div id="toast-container">
+        {% if messages %}
+        {% for message in messages %}
+            <div class="toast {{ message.tags }}">
+                {{ message }}
+            </div>
+        {% endfor %}
+        {% endif %}
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Page Header -->
+        <div class="page-header">
+            <h1>Selamat Datang, {{ user.username }}!</h1>
+            <p>Dashboard Admin Emosense - Sistem Deteksi Emosi</p>
+        </div>
+
+        <!-- Statistics Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>Total Akun Terdaftar</h3>
+                    <div class="stat-number">{{ total_users }}</div>
+                </div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-content">
+                    <h3>Total Deteksi Emosi</h3>
+                    <div class="stat-number">{{ total_cek_emosi }}</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Tables Section -->
+        <div class="tables-section">
+            <!-- Recent Users Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h2>User Terbaru (5 Terakhir)</h2>
+                </div>
+                
+                <div class="table-wrapper">
+                    {% if recent_users %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Username</th>
+                                <th>Email</th>
+                                <th>Role</th>
+                                <th>Terdaftar</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for user_item in recent_users %}
+                            <tr>
+                                <td><strong>{{ user_item.username }}</strong></td>
+                                <td>{{ user_item.email }}</td>
+                                <td>
+                                    <span class="badge {{ user_item.role }}">{{ user_item.role }}</span>
+                                </td>
+                                <td>{{ user_item.date_joined|date:"d M Y" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="no-data">
+                        <p>Belum ada data user terdaftar</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Recent Detections Table -->
+            <div class="table-card">
+                <div class="table-header">
+                    <h2>Deteksi Emosi Terbaru (5 Terakhir)</h2>
+                </div>
+                
+                <div class="table-wrapper">
+                    {% if recent_cek_emosi %}
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>User</th>
+                                <th>Emosi</th>
+                                <th>Komentar</th>
+                                <th>Tanggal</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for cek in recent_cek_emosi %}
+                            <tr>
+                                <td><strong>{{ cek.user.username }}</strong></td>
+                                <td>
+                                    <span class="badge {{ cek.hasil_deteksi }}">{{ cek.hasil_deteksi }}</span>
+                                </td>
+                                <td>{{ cek.jumlah_comment }} komentar</td>
+                                <td>{{ cek.tanggal|date:"d M Y H:i" }}</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                    {% else %}
+                    <div class="no-data">
+                        <p>Belum ada data deteksi emosi</p>
+                    </div>
+                    {% endif %}
+                </div>
+            </div>
+
+
+    <script>
+        // Auto-hide toast notifications after 4 seconds
+        const toasts = document.querySelectorAll('.toast');
+        toasts.forEach(toast => {
+            setTimeout(() => {
+                toast.classList.add('hide');
+                setTimeout(() => toast.remove(), 400);
+            }, 4000);
+        });
+    </script>
+</body>
+</html>

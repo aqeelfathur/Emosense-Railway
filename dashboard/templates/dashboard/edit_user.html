@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit User - Emosense</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: #F8F9FA;
+            display: flex;
+            min-height: 100vh;
+            color: #2D3748;
+        }
+
+        /* ========== SIDEBAR ========== */
+        .sidebar {
+            width: 260px;
+            background: #63919D;
+            color: white;
+            position: fixed;
+            height: 100vh;
+            z-index: 1000;
+        }
+
+        .sidebar-header {
+            padding: 32px 24px;
+            border-bottom: 1px solid rgba(255,255,255,0.15);
+        }
+
+        .sidebar-header h2 {
+            font-size: 24px;
+            margin-bottom: 4px;
+            color: #FFFFFF;
+            letter-spacing: 1px;
+            font-weight: 600;
+        }
+
+        .sidebar-header p {
+            font-size: 13px;
+            color: rgba(255,255,255,0.75);
+            font-weight: 400;
+        }
+
+        .sidebar-menu {
+            padding: 24px 0;
+        }
+
+        .sidebar-menu a {
+            display: block;
+            padding: 14px 24px;
+            color: rgba(255,255,255,0.85);
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border-left: 3px solid transparent;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .sidebar-menu a:hover {
+            background: rgba(255,255,255,0.1);
+            color: #FFFFFF;
+            border-left-color: #FFFFFF;
+        }
+
+        .sidebar-menu a.active {
+            background: rgba(255,255,255,0.15);
+            border-left-color: #FFFFFF;
+            color: #FFFFFF;
+            font-weight: 600;
+        }
+
+        /* ========== MAIN CONTENT ========== */
+        .main-content {
+            margin-left: 260px;
+            flex: 1;
+            padding: 32px;
+        }
+
+        /* ========== HEADER ========== */
+        .header {
+            background: #FFFFFF;
+            padding: 28px 32px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            margin-bottom: 24px;
+            border-left: 4px solid #63919D;
+        }
+
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 6px;
+            font-weight: 600;
+            color: #1A202C;
+        }
+
+        .header p {
+            font-size: 14px;
+            color: #718096;
+            font-weight: 400;
+        }
+
+        /* ========== ALERT MESSAGES ========== */
+        .alert {
+            padding: 16px 24px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+            font-size: 14px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            font-weight: 500;
+        }
+
+        .alert-error {
+            background: #FEE2E2;
+            color: #991B1B;
+            border-left: 4px solid #EF4444;
+        }
+
+        .alert-close {
+            cursor: pointer;
+            font-size: 20px;
+            font-weight: 600;
+            color: inherit;
+            background: none;
+            border: none;
+            padding: 0 8px;
+            transition: opacity 0.2s;
+        }
+
+        .alert-close:hover {
+            opacity: 0.7;
+        }
+        
+        /* ========== CONTENT CARD ========== */
+        .content-card {
+            background: #FFFFFF;
+            padding: 28px;
+            border-radius: 12px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+            max-width: 600px;
+        }
+
+        /* ========== INFO BOX ========== */
+        .info-box {
+            background: #e7e7e7;
+            border-left: 4px solid #8d8d8d;
+            padding: 16px;
+            border-radius: 8px;
+            margin-bottom: 24px;
+        }
+
+        .info-box p {
+            color: #000000;
+            font-size: 13px;
+            margin: 0;
+            font-weight: 500;
+        }
+
+        /* ========== FORM ========== */
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #1A202C;
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        .form-group input,
+        .form-group select {
+            width: 100%;
+            padding: 12px 16px;
+            border: 1px solid #E2E8F0;
+            border-radius: 6px;
+            font-size: 14px;
+            font-family: 'Poppins', sans-serif;
+            transition: border-color 0.2s;
+            color: #2D3748;
+        }
+
+        .form-group input:focus,
+        .form-group select:focus {
+            outline: none;
+            border-color: #3B82F6;
+            box-shadow: 0 0 0 3px rgba(59, 130, 246, 0.1);
+        }
+
+        .form-group small {
+            display: block;
+            margin-top: 6px;
+            color: #718096;
+            font-size: 12px;
+            font-weight: 400;
+        }
+
+        /* ========== FORM ACTIONS ========== */
+        .form-actions {
+            display: flex;
+            gap: 12px;
+            margin-top: 28px;
+        }
+
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            font-weight: 600;
+            text-decoration: none;
+            display: inline-block;
+            transition: all 0.2s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: #3B82F6;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2563EB;
+            transform: translateY(-1px);
+        }
+
+        .btn-secondary {
+            background: #6B7280;
+            color: white;
+        }
+
+        .btn-secondary:hover {
+            background: #4B5563;
+            transform: translateY(-1px);
+        }
+
+        /* ========== RESPONSIVE ========== */
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+            .main-content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+    <body>
+        <!-- Sidebar -->
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h2>EMOSENSE</h2>
+                <p>Admin Dashboard</p>
+            </div>
+            <nav class="sidebar-menu">
+                <a href="{% url 'dashboard:home' %}">
+                    Dashboard
+                </a>
+                <a href="{% url 'dashboard:kelola_user' %}" class="active">
+                    Kelola User
+                </a>
+                <a href="{% url 'dashboard:kelola_history' %}">
+                    Kelola History
+                </a>
+                <a href="{% url 'users:logout' %}">
+                    Logout
+                </a>
+            </nav>
+        </aside>
+        
+        <!-- Main Content -->
+        <main class="main-content">
+            <div class="header">
+                <h1>Edit User</h1>
+                <p>Ubah data pengguna {{ user_data.username }}</p>
+            </div>
+
+            <!-- Alert Messages -->
+            {% if messages %}
+                {% for message in messages %}
+                <div class="alert alert-{{ message.tags }}">
+                    <span>{{ message }}</span>
+                    <button class="alert-close" onclick="this.parentElement.style.display='none'">&times;</button>
+                </div>
+                {% endfor %}
+            {% endif %}
+            
+            <div class="content-card">
+                <div class="info-box">
+                    <p><strong>Info:</strong> Password bersifat opsional. Kosongkan jika tidak ingin mengubah password.</p>
+                </div>
+
+                <form method="POST" action="">
+                    {% csrf_token %}
+                    
+                    <div class="form-group">
+                        <label for="username">Username *</label>
+                        <input type="text" 
+                            id="username" 
+                            name="username" 
+                            value="{{ user_data.username }}"
+                            maxlength="20"
+                            required>
+                        <small>Maksimal 20 karakter</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Email *</label>
+                        <input type="email" 
+                            id="email" 
+                            name="email" 
+                            value="{{ user_data.email }}"
+                            maxlength="30"
+                            required>
+                        <small>Maksimal 30 karakter</small>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="role">Role *</label>
+                        <select id="role" name="role" required>
+                            <option value="user" {% if user_data.role == 'user' %}selected{% endif %}>User</option>
+                            <option value="admin" {% if user_data.role == 'admin' %}selected{% endif %}>Admin</option>
+                        </select>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="password">Password Baru (Opsional)</label>
+                        <input type="password" 
+                            id="password" 
+                            name="password"
+                            placeholder="Kosongkan jika tidak ingin mengubah">
+                        <small>Minimal 8 karakter jika ingin mengubah password</small>
+                    </div>
+
+                    <div class="form-actions">
+                        <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        <a href="{% url 'dashboard:kelola_user' %}" class="btn btn-secondary">Batal</a>
+                    </div>
+                </form>
+            </div>
+        </main>
+    </body>
+</head>
+</html>

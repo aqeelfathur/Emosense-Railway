@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cek Emosi - Analisis Emosi Teks</title>
+    
+    <!-- Bootstrap CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <!-- Bootstrap Icons -->
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+            background: #63919D;
+            min-height: 100vh;
+        }
+        
+        .container {
+            max-width: 1200px;
+        }
+        
+        .card {
+            border: none;
+            border-radius: 15px;
+            transition: transform 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .top-navbar {
+            background: #63919D;
+            padding: 16px 0;
+            box-shadow: 0 2px 4px rgba(0,0,0,0.04);
+        }
+        
+        .navbar-brand {
+            font-size: 22px;
+            font-weight: 700;
+            color: #1a1a1a;
+        }
+
+        .navbar-brand span {
+            color: #E8EBED;
+        }
+
+        .navbar-subtitle {
+            font-size: 11px;
+            color: #E8EBED;
+            display: block;
+            margin-top: -4px;
+            font-weight: 400;
+        }
+
+        .nav-links {
+            display: flex;
+            gap: 32px;
+            align-items: center;
+        }
+
+        .nav-links a {
+            color: #e3e3e3;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            transition: color 0.2s;
+        }
+
+        .nav-links a:hover, .nav-links a.active {
+            color: #ffffff;
+        }
+        .user-name {
+            color: #e3e3e3;
+            text-decoration: none;
+            font-size: 15px;
+            font-weight: 500;
+            margin-right: 8px;
+        }
+        .user-menu {
+            position: relative;
+        }
+        .user-avatar {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            cursor: pointer;
+            border: 2px solid #e0e0e0;
+        }
+
+        .user-dropdown {
+            position: absolute;
+            right: 0;
+            top: 48px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+            padding: 8px;
+            min-width: 180px;
+            display: none;
+            z-index: 1000;
+        }
+        .user-dropdown.show {
+            display: block;
+        }
+        .user-dropdown a {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            padding: 10px 14px;
+            color: #dc3545;
+            text-decoration: none;
+            border-radius: 8px;
+            font-size: 14px;
+            transition: background 0.2s;
+        }
+        .user-dropdown a:hover {
+            background: #f8f9fa;
+        }
+        
+        .btn-primary {
+            background: #63919D;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(102, 126, 234, 0.4);
+        }
+        
+        .btn-danger {
+            background: #63919D;
+            border: none;
+            border-radius: 10px;
+            padding: 12px 30px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-danger:hover {
+            transform: scale(1.05);
+            box-shadow: 0 5px 15px rgba(245, 87, 108, 0.4);
+        }
+        
+        textarea.form-control, input.form-control {
+            border-radius: 10px;
+            border: 2px solid #e0e0e0;
+            padding: 15px;
+            transition: all 0.3s ease;
+        }
+        
+        textarea.form-control:focus, input.form-control:focus {
+            border-color: #667eea;
+            box-shadow: 0 0 0 0.25rem rgba(102, 126, 234, 0.25);
+        }
+        
+        .progress {
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress-bar {
+            transition: width 1s ease;
+        }
+        
+        #emotionIcon {
+            animation: bounce 2s infinite;
+        }
+        
+        @keyframes bounce {
+            0%, 100% { transform: translateY(0); }
+            50% { transform: translateY(-10px); }
+        }
+        
+        .card-header {
+            border-radius: 15px 15px 0 0 !important;
+        }
+        
+        .spinner-border {
+            width: 3rem;
+            height: 3rem;
+        }
+        
+        .display-4 {
+            font-weight: 700;
+            color: #f8f9fa;
+        }
+        
+        .lead {
+            color: #f8f9fa !important;
+        }
+        
+        .alert {
+            border-radius: 10px;
+            border: none;
+        }
+        
+        .shadow-lg {
+            box-shadow: 0 1rem 3rem rgba(0,0,0,.175) !important;
+        }
+        
+        .shadow-sm {
+            box-shadow: 0 .125rem .25rem rgba(0,0,0,.075) !important;
+        }
+
+        .comment-item {
+            border-left: 4px solid #667eea;
+            background: #f8f9fa;
+            transition: all 0.3s ease;
+        }
+
+        .comment-item:hover {
+            background: #e9ecef;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+        }
+
+        .emotion-badge {
+            font-size: 0.85rem;
+            padding: 0.4rem 0.8rem;
+            border-radius: 20px;
+            font-weight: 600;
+        }
+
+        .emotion-senang {
+            background: linear-gradient(135deg, #28a745 0%, #20c997 100%);
+            color: white;
+        }
+
+        .emotion-marah {
+            background: linear-gradient(135deg, #dc3545 0%, #e83e8c 100%);
+            color: white;
+        }
+
+        .emotion-sedih {
+            background: linear-gradient(135deg, #17a2b8 0%, #20c997 100%);
+            color: white;
+        }
+
+        .emotion-takut {
+            background: linear-gradient(135deg, #ffc107 0%, #fd7e14 100%);
+            color: white;
+        }
+
+        .emotion-netral {
+            background: linear-gradient(135deg, #6c757d 0%, #95a5a6 100%);
+            color: white;
+        }
+
+        .comment-text {
+            line-height: 1.6;
+            color: #495057;
+        }
+
+        .filter-buttons {
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+
+        .filter-btn {
+            border-radius: 20px;
+            padding: 0.5rem 1rem;
+            border: 2px solid transparent;
+            transition: all 0.3s ease;
+        }
+
+        .filter-btn:hover {
+            transform: translateY(-2px);
+        }
+
+        .filter-btn.active {
+            border-color: #667eea;
+            box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+        }
+    </style>
+    
+</head>
+<body>
+    <nav class="top-navbar">
+        <div class="container-fluid" style="max-width: 1200px; margin: 0 auto; padding: 0 20px;">
+            <div class="d-flex justify-content-between align-items-center">
+                <div class="navbar-brand">
+                    Emo<span>Sense</span>
+                    <span class="navbar-subtitle">Emotion Analytics</span>
+                </div>
+                <div class="nav-links">
+                    <a href="/" class="active">Home</a>
+                    <a href="{% url 'history:history' %}">Riwayat</a>
+                </div>
+                <div class="d-flex align-items-center gap-2">
+                    <div class="user-name">
+                        Hi, {{ user.username }}                
+                    </div>
+                    <div class="user-menu">
+                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=5B8A94&color=fff" alt="User" class="user-avatar" onclick="toggleUserMenu()">
+                        <div class="user-dropdown" id="userDropdown">
+                            <a href="{% url 'users:logout' %}">
+                                <i class="bi bi-box-arrow-right"></i>
+                                Logout
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container py-5">
+        <!-- Header -->
+        <div class="text-center mb-5">
+            <h1 class="display-4">Deteksi Emosi</h1>
+            <p class="lead">
+                Analisis emosi dari komentar YouTube menggunakan AI
+            </p>
+        </div>
+
+        <!-- YouTube Input Form -->
+        <div class="card shadow-sm">
+            <div class="card-body p-4">
+                <form id="youtubeForm">
+                    <div class="mb-3">
+                        <label for="youtube_url" class="form-label">URL YouTube</label>
+                        <input type="url" class="form-control" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="max_comments" class="form-label">Maksimal Komentar</label>
+                        <input type="number" class="form-control" id="max_comments" name="max_comments" value="50" min="1" max="100">
+                    </div>
+                    <button type="submit" class="btn btn-danger btn-lg w-100" id="analyzeYoutubeBtn">
+                        <i class="bi bi-youtube"></i> Analisis Komentar
+                    </button>
+                </form>
+            </div>
+        </div>
+
+        <!-- Loading Indicator -->
+        <div id="loadingIndicator" class="text-center mt-4" style="display: none;">
+            <div class="spinner-border text-primary" role="status">
+                <span class="visually-hidden">Loading...</span>
+            </div>
+            <p class="mt-2">Sedang menganalisis...</p>
+        </div>
+        
+        <!-- Result Section -->
+        <div id="resultSection" class="mt-5" style="display: none;">
+            <div class="card shadow-lg">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Hasil Analisis</h4>
+                </div>
+                <div class="card-body">
+                    <div class="row">
+                        <!-- Main Result -->
+                        <div class="col-md-4 text-center mb-4">
+                            <div id="emotionIcon" style="font-size: 6rem;"></div>
+                            <h2 id="emotionLabel" class="mt-3"></h2>
+                            <div class="mt-3">
+                                <h5 class="text-muted">Persentase Skor</h5>
+                                <h3 id="confidenceScore" class="text-primary"></h3>
+                                <div class="progress mt-2" style="height: 30px;">
+                                    <div id="confidenceBar" class="progress-bar bg-success" role="progressbar" style="width: 0%"></div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Detailed Scores -->
+                        <div class="col-md-8">
+                            <h5 class="mb-3">Detail Skor Semua Emosi</h5>
+                            <div id="detailScores"></div>
+
+                            <!-- Chart -->
+                            <div class="mt-4">
+                                <canvas id="emotionChart"></canvas>
+                            </div>
+
+                            <!-- YouTube specific info -->
+                            <div id="youtubeInfo" style="display: none;" class="mt-4">
+                                <div class="alert alert-info">
+                                    <strong>Total Komentar Dianalisis:</strong> <span id="totalComments"></span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Action Buttons -->
+                    <div class="text-center mt-4">
+                        <button class="btn btn-outline-primary" onclick="resetForm()">
+                            <i class="bi bi-arrow-clockwise"></i> Analisis Lagi
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Comments List Section -->
+            <div id="commentsSection" class="card shadow-lg mt-4" style="display: none;">
+                <div class="card-header bg-secondary text-white">
+                    <h4 class="mb-0">Daftar Komentar & Emosi</h4>
+                </div>
+                <div class="card-body">
+                    <!-- Filter Buttons -->
+                    <div class="d-flex filter-buttons mb-4">
+                        <button class="btn btn-sm btn-outline-secondary filter-btn active" data-filter="all">
+                            <i class="bi bi-list"></i> Semua
+                        </button>
+                        <button class="btn btn-sm btn-outline-success filter-btn" data-filter="Senang">
+                            Senang
+                        </button>
+                        <button class="btn btn-sm btn-outline-danger filter-btn" data-filter="Marah">
+                            Marah
+                        </button>
+                        <button class="btn btn-sm btn-outline-info filter-btn" data-filter="Sedih">
+                            Sedih
+                        </button>
+                        <button class="btn btn-sm btn-outline-warning filter-btn" data-filter="Takut">
+                            Takut
+                        </button>
+                        <button class="btn btn-sm btn-outline-secondary filter-btn" data-filter="Netral">
+                            Netral
+                        </button>
+                    </div>
+
+                    <!-- Comments Container -->
+                    <div id="commentsList"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
+  
+    <script>
+        let emotionChart = null;
+        let commentsData = [];
+
+        // Urutan emosi yang diinginkan
+        const EMOTION_ORDER = ['Senang', 'Marah', 'Sedih', 'Takut', 'Netral'];
+
+        function toggleUserMenu() {
+            document.getElementById('userDropdown').classList.toggle('show');
+        }
+        
+        document.addEventListener('click', function(event) {
+            const userMenu = document.querySelector('.user-menu');
+            if (!userMenu.contains(event.target)) {
+                document.getElementById('userDropdown').classList.remove('show');
+            }
+        });
+
+        // Handle YouTube Form Submit
+        document.getElementById('youtubeForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+            const url = document.querySelector('input[name="youtube_url"]').value;
+            const maxComments = document.querySelector('input[name="max_comments"]').value;
+
+            if (!url.trim()) {
+                alert('Link YouTube tidak boleh kosong!');
+                return;
+            }
+
+            showLoading();
+
+            // Kirim data ke API Django untuk analisis YouTube
+            fetch('/analyze-youtube/', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/x-www-form-urlencoded',
+                    'X-CSRFToken': getCookie('csrftoken')
+                },
+                body: new URLSearchParams({
+                    youtube_url: url,
+                    max_comments: maxComments
+                })
+            })
+            .then(response => response.json())
+            .then(data => {
+                hideLoading();
+
+                if (data.error) {
+                    alert(data.error);
+                    return;
+                }
+
+                displayResult(data, 'youtube');
+            })
+            .catch(error => {
+                hideLoading();
+                alert('Terjadi kesalahan saat memproses: ' + error);
+            });
+
+        });
+
+        function showLoading() {
+            document.getElementById('loadingIndicator').style.display = 'block';
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('analyzeYoutubeBtn').disabled = true;
+        }
+
+        function hideLoading() {
+            document.getElementById('loadingIndicator').style.display = 'none';
+            document.getElementById('analyzeYoutubeBtn').disabled = false;
+        }
+        
+        function sortEmotionScores(scores) {
+            const sortedScores = {};
+            EMOTION_ORDER.forEach(emotion => {
+                if (scores.hasOwnProperty(emotion)) {
+                    sortedScores[emotion] = scores[emotion];
+                }
+            });
+            Object.keys(scores).forEach(emotion => {
+                if (!sortedScores.hasOwnProperty(emotion)) {
+                    sortedScores[emotion] = scores[emotion];
+                }
+            });
+            return sortedScores;
+        }
+
+        function displayResult(data, type) {
+            const emotionIcons = {
+                'Senang': '😊',
+                'Marah': '😠',
+                'Sedih': '😢',
+                'Takut': '😨',
+                'Netral': '😐'
+            };
+
+            document.getElementById('emotionIcon').textContent = emotionIcons[data.emotion];
+            document.getElementById('emotionLabel').textContent = data.emotion;
+
+            const confidence = data.confidence.toFixed(1);
+            document.getElementById('confidenceScore').textContent = confidence + '%';
+            document.getElementById('confidenceBar').style.width = confidence + '%';
+
+            const sortedScores = sortEmotionScores(data.all_scores);
+
+            let scoresHtml = '';
+            for (const [emotion, score] of Object.entries(sortedScores)) {
+                const percentage = score.toFixed(1);
+                scoresHtml += `
+                    <div class="mb-3">
+                        <div class="d-flex justify-content-between mb-1">
+                            <span>${emotionIcons[emotion]} ${emotion}</span>
+                            <strong>${percentage}%</strong>
+                        </div>
+                        <div class="progress" style="height: 25px;">
+                            <div class="progress-bar ${getProgressBarClass(emotion)}" style="width: ${percentage}%"></div>
+                        </div>
+                    </div>
+                `;
+            }
+            document.getElementById('detailScores').innerHTML = scoresHtml;
+
+            if (type === 'youtube') {
+                document.getElementById('youtubeInfo').style.display = 'block';
+                document.getElementById('totalComments').textContent = data.total_comments;
+                
+                if (data.comments && data.comments.length > 0) {
+                    commentsData = data.comments;
+                    displayComments(commentsData);
+                    document.getElementById('commentsSection').style.display = 'block';
+                }
+            } else {
+                document.getElementById('youtubeInfo').style.display = 'none';
+                document.getElementById('commentsSection').style.display = 'none';
+            }
+
+            createChart(sortedScores);
+
+            document.getElementById('resultSection').style.display = 'block';
+            document.getElementById('resultSection').scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        function displayComments(comments, filter = 'all') {
+            const emotionIcons = {
+                'Senang': '😊',
+                'Marah': '😠',
+                'Sedih': '😢',
+                'Takut': '😨',
+                'Netral': '😐'
+            };
+
+            const filteredComments = filter === 'all' 
+                ? comments 
+                : comments.filter(c => c.emotion === filter);
+
+            let html = '';
+            filteredComments.forEach((comment, index) => {
+                const emotionClass = `emotion-${comment.emotion.toLowerCase()}`;
+                html += `
+                    <div class="comment-item p-3 mb-3 rounded">
+                        <div class="d-flex justify-content-between align-items-start mb-2">
+                            <span class="emotion-badge ${emotionClass}">
+                                ${emotionIcons[comment.emotion]} ${comment.emotion}
+                            </span>
+                            <small class="text-muted">
+                                <i class="bi bi-graph-up"></i> ${comment.confidence.toFixed(1)}%
+                            </small>
+                        </div>
+                        <p class="comment-text mb-0">${escapeHtml(comment.text)}</p>
+                    </div>
+                `;
+            });
+
+            if (filteredComments.length === 0) {
+                html = '<div class="alert alert-info">Tidak ada komentar dengan filter ini.</div>';
+            }
+
+            document.getElementById('commentsList').innerHTML = html;
+        }
+        
+        function escapeHtml(text) {
+            const div = document.createElement('div');
+            div.textContent = text;
+            return div.innerHTML;
+        }
+
+        document.addEventListener('click', function(e) {
+            if (e.target.closest('.filter-btn')) {
+                const btn = e.target.closest('.filter-btn');
+                const filter = btn.dataset.filter;
+
+                document.querySelectorAll('.filter-btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+
+                displayComments(commentsData, filter);
+            }
+        });
+        
+        function getProgressBarClass(emotion) {
+            const classes = {
+                'Senang': 'bg-success',
+                'Marah': 'bg-danger',
+                'Sedih': 'bg-info',
+                'Takut': 'bg-warning',
+                'Netral': 'bg-secondary'
+            };
+            return classes[emotion] || 'bg-secondary';
+        }
+        
+        function createChart(scores) {
+            const ctx = document.getElementById('emotionChart').getContext('2d');
+
+            if (emotionChart) {
+                emotionChart.destroy();
+            }
+
+            const labels = Object.keys(scores);
+            const data = Object.values(scores);
+
+            const colorMap = {
+                'Senang': 'rgba(40, 167, 69, 0.8)',
+                'Marah': 'rgba(220, 53, 69, 0.8)',
+                'Sedih': 'rgba(23, 162, 184, 0.8)',
+                'Takut': 'rgba(255, 193, 7, 0.8)',
+                'Netral': 'rgba(108, 117, 125, 0.8)'
+            };
+
+            const backgroundColor = labels.map(label => colorMap[label] || 'rgba(128, 128, 128, 0.8)');
+
+            emotionChart = new Chart(ctx, {
+                type: 'doughnut',
+                data: {
+                    labels: labels,
+                    datasets: [{
+                        data: data,
+                        backgroundColor: backgroundColor,
+                        borderWidth: 2
+                    }]
+                },
+                options: {
+                    responsive: true,
+                    plugins: {
+                        legend: {
+                            position: 'bottom',
+                        },
+                        tooltip: {
+                            callbacks: {
+                                label: function(context) {
+                                    return context.label + ': ' + context.parsed.toFixed(1) + '%';
+                                }
+                            }
+                        }
+                    }
+                }
+            });
+        }
+        
+        function resetForm() {
+            document.getElementById('resultSection').style.display = 'none';
+            document.getElementById('commentsSection').style.display = 'none';
+            document.getElementById('youtubeForm').reset();
+            commentsData = [];
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+        
+    </script>
+</body>
+</html>
