@@ -40,7 +40,6 @@ INSTALLED_APPS = [
 
     # REST API
     'rest_framework',
-    "behave_django",
 
 ]
 
