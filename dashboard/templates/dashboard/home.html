@@ -371,16 +371,16 @@
             <p>Admin Dashboard</p>
         </div>
         <nav class="sidebar-menu">
-            <a href="#" class="active">
+            <a href="{% url 'dashboard:home' %}" class="active">
                 Dashboard
             </a>
-            <a href="#">
+            <a href="{% url 'dashboard:kelola_user' %}" >
                 Kelola User
             </a>
-            <a href="#">
+            <a href="{% url 'dashboard:kelola_history' %}">
                 Kelola History
             </a>
-            <a href="#">
+            <a href="{% url 'users:logout' %}">
                 Logout
             </a>
         </nav>

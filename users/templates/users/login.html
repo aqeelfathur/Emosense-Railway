@@ -54,7 +54,8 @@
         .welcome-panel p {
             font-size: 1rem;
             line-height: 1.6;
-            margin-bottom: 2rem;
+            margin-top: 10px;
+            margin-bottom: 10px;
             opacity: 0.95;
         }
 
@@ -186,9 +187,12 @@
         <!-- Panel Kiri: Welcome -->
         <div class="welcome-panel">
             <h2>Hello, Friend!</h2>
-            <p>Enter your personal details and start your journey with us</p>
             <a href="{% url 'users:register' %}">
-                <button type="button" class="signup-btn">SIGN UP</button>
+                <button type="button" class="signup-btn">Sign Up</button>
+            </a>
+            <p>atau Mulai Cek Emosi!</p>
+            <a href="/">
+                <button type="button" class="signup-btn">Cek Emosi</button>
             </a>
         </div>
 

@@ -282,6 +282,51 @@
             border-color: #667eea;
             box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
         }
+
+        .btn-auth-login {
+            background: transparent;
+            border: 2px solid #E8EBED;
+            color: #E8EBED;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 500;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-auth-login:hover {
+            background: rgba(232, 235, 237, 0.1);
+            border-color: #ffffff;
+            color: #ffffff;
+            transform: translateY(-2px);
+        }
+
+        .btn-auth-register {
+            background: #E8EBED;
+            border: 2px solid #E8EBED;
+            color: #63919D;
+            border-radius: 8px;
+            padding: 8px 20px;
+            font-weight: 600;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+
+        .btn-auth-register:hover {
+            background: #ffffff;
+            border-color: #ffffff;
+            color: #63919D;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(232, 235, 237, 0.3);
+        }
     </style>
     
 </head>
@@ -298,18 +343,27 @@
                     <a href="{% url 'history:history' %}">Riwayat</a>
                 </div>
                 <div class="d-flex align-items-center gap-2">
-                    <div class="user-name">
-                        Hi, {{ user.username }}                
-                    </div>
-                    <div class="user-menu">
-                        <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=5B8A94&color=fff" alt="User" class="user-avatar" onclick="toggleUserMenu()">
-                        <div class="user-dropdown" id="userDropdown">
-                            <a href="{% url 'users:logout' %}">
-                                <i class="bi bi-box-arrow-right"></i>
-                                Logout
-                            </a>
+                    {% if user.is_authenticated %}
+                        <div class="user-name">
+                            Hi, {{ user.username }}                
                         </div>
-                    </div>
+                        <div class="user-menu">
+                            <img src="https://ui-avatars.com/api/?name={{ user.username }}&background=5B8A94&color=fff" alt="User" class="user-avatar" onclick="toggleUserMenu()">
+                            <div class="user-dropdown" id="userDropdown">
+                                <a href="{% url 'users:logout' %}">
+                                    <i class="bi bi-box-arrow-right"></i>
+                                    Logout
+                                </a>
+                            </div>
+                        </div>
+                    {% else %}
+                        <a href="{% url 'users:login' %}" class="btn-auth-login">
+                            Login
+                        </a>
+                        <a href="{% url 'users:register' %}" class="btn-auth-register">
+                            Register
+                        </a>
+                    {% endif %}
                 </div>
             </div>
         </div>
@@ -328,6 +382,7 @@
         <div class="card shadow-sm">
             <div class="card-body p-4">
                 <form id="youtubeForm">
+                    {% csrf_token %}
                     <div class="mb-3">
                         <label for="youtube_url" class="form-label">URL YouTube</label>
                         <input type="url" class="form-control" id="youtube_url" name="youtube_url" placeholder="https://www.youtube.com/watch?v=..." required>
@@ -458,6 +513,22 @@
             }
         });
 
+        // CSRF Token function
+        function getCookie(name) {
+            let cookieValue = null;
+            if (document.cookie && document.cookie !== '') {
+                const cookies = document.cookie.split(';');
+                for (let i = 0; i < cookies.length; i++) {
+                    const cookie = cookies[i].trim();
+                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
+                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                        break;
+                    }
+                }
+            }
+            return cookieValue;
+        }
+
         // Handle YouTube Form Submit
         document.getElementById('youtubeForm').addEventListener('submit', function(e) {
             e.preventDefault();
@@ -471,19 +542,28 @@
 
             showLoading();
 
+            // Ambil CSRF token
+            const csrftoken = getCookie('csrftoken');
+
             // Kirim data ke API Django untuk analisis YouTube
             fetch('/analyze-youtube/', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/x-www-form-urlencoded',
-                    'X-CSRFToken': getCookie('csrftoken')
+                    'X-CSRFToken': csrftoken
                 },
                 body: new URLSearchParams({
                     youtube_url: url,
                     max_comments: maxComments
                 })
             })
-            .then(response => response.json())
+            .then(response => {
+                // Cek apakah response OK
+                if (!response.ok) {
+                    throw new Error(`HTTP error! status: ${response.status}`);
+                }
+                return response.json();
+            })
             .then(data => {
                 hideLoading();
 
@@ -496,7 +576,8 @@
             })
             .catch(error => {
                 hideLoading();
-                alert('Terjadi kesalahan saat memproses: ' + error);
+                console.error('Error:', error);
+                alert('Terjadi kesalahan saat memproses: ' + error.message);
             });
 
         });
@@ -703,21 +784,6 @@
             document.getElementById('youtubeForm').reset();
             commentsData = [];
             window.scrollTo({ top: 0, behavior: 'smooth' });
-        }
-
-        function getCookie(name) {
-            let cookieValue = null;
-            if (document.cookie && document.cookie !== '') {
-                const cookies = document.cookie.split(';');
-                for (let i = 0; i < cookies.length; i++) {
-                    const cookie = cookies[i].trim();
-                    if (cookie.substring(0, name.length + 1) === (name + '=')) {
-                        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-                        break;
-                    }
-                }
-            }
-            return cookieValue;
         }
         
     </script>

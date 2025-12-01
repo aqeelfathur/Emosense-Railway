@@ -17,10 +17,10 @@ def login_view(request):
             # Cek role user
             if user.role == 'admin':
                 messages.success(request, f'Selamat datang kembali, {user.username} (Admin)')
-                return render(request, 'dashboard/home.html')
+                return redirect('/dashboard') 
             else:
                 messages.success(request, f'Selamat datang kembali, {user.username}')
-                return render(request, 'emotion/cek_emosi.html')
+                return redirect('/')  
         else:
             messages.error(request, 'Username atau password salah.')
 
