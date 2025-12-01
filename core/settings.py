@@ -152,6 +152,6 @@ HF_MODEL_NAME = "hasanfadh/indo-bert-emosense"
 EMOTION_LABELS = ["Senang", "Marah", "Sedih", "Takut", "Netral"]
 
 CSRF_TRUSTED_ORIGINS = [
-    'emosense-railway.railway.internal',  
-    'emosense.up.railway.app', 
+    'https://emosense-railway.railway.internal',  
+    'https://emosense.up.railway.app', 
 ]
