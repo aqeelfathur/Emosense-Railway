@@ -80,13 +80,23 @@ WSGI_APPLICATION = 'core.wsgi.application'
 # ======================================================
 # DATABASE (Railway)
 # ======================================================
-DATABASES = {
-    'default': dj_database_url.config(
-        default=os.getenv('DATABASE_URL'),
-        conn_max_age=600,
-        conn_health_checks=True,
-    )
-}
+DATABASE_URL = os.getenv('DATABASE_URL')
+
+print(f"🔍 DATABASE_URL exists: {bool(DATABASE_URL)}", flush=True)
+
+if DATABASE_URL:
+    DATABASES = {
+        'default': dj_database_url.config(
+            default=DATABASE_URL,
+            conn_max_age=600,
+            conn_health_checks=True,
+        )
+    }
+    print(f"🔍 Database engine: {DATABASES['default'].get('ENGINE')}", flush=True)
+    print(f"🔍 Database name: {DATABASES['default'].get('NAME')}", flush=True)
+else:
+    print("❌ DATABASE_URL not found!", flush=True)
+    DATABASES = {}  # Akan error, tapi kita bisa lihat di log
 
 
 # ======================================================
