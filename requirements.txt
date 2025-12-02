@@ -5,6 +5,7 @@ mysqlclient==2.2.7
 python-dotenv==1.2.1
 whitenoise==6.7.0
 djangorestframework==3.15.2
+dj-database-url==2.1.0
 
 # Google API & Utilities
 google-api-python-client==2.185.0
