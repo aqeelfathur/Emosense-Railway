@@ -150,6 +150,7 @@ MAX_YOUTUBE_COMMENTS = 500
 # ======================================================
 # MACHINE LEARNING CONFIGURATION
 # ======================================================
+HUGGINGFACE_API_KEY= os.getenv("HUGGINGFACE_API_KEY", "")
 HF_MODEL_NAME = "hasanfadh/indo-bert-emosense"
 EMOTION_LABELS = ["Senang", "Marah", "Sedih", "Takut", "Netral"]
 
