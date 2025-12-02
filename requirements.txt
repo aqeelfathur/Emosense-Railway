@@ -1,16 +1,12 @@
+# Core Django
 Django==5.2.8
 gunicorn==23.0.0
 mysqlclient==2.2.7
 python-dotenv==1.2.1
 whitenoise==6.7.0
-djangorestframework==3.15.2 
+djangorestframework==3.15.2
 
-transformers==4.57.1
-tokenizers==0.22.1
-
---extra-index-url https://download.pytorch.org/whl/cpu
-torch==2.9.0+cpu
-
+# Google API & Utilities
 google-api-python-client==2.185.0
 requests==2.32.3
 numpy==2.1.3
